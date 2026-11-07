@@ -1,0 +1,17 @@
+.product-photo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem;
+  margin: 0.5rem 0 1rem;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+}
+.product-photo-hint {
+  width: 100%;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+.product-photo-controls button { cursor: pointer; }
+.product-photo-controls button:disabled { cursor: default; }

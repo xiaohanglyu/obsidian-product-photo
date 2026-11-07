@@ -1,0 +1,46 @@
+# Dependencies and local caches
+node_modules/
+.npm/
+.cache/
+.vite/
+.vitest/
+
+# Generated plugin bundle and install staging
+/main.js
+/dist/
+*.js.map
+*.tsbuildinfo
+
+# Test output and browser artifacts
+/coverage/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.auth/
+
+# Local environment configuration (keep example files)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+/tmp/
+
+# Local editor settings
+/.idea/
+/.vscode/
+.history/
+
+# Operating system metadata
+.DS_Store
+._*
+Thumbs.db
+
+# Intentionally versioned: docs/assets/, downloads/, tests/fixtures/,
+# package-lock.json, manifest.json, styles.css, and versions.json.

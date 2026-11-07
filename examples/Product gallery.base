@@ -1,0 +1,13 @@
+filters:
+  and:
+    - file.ext == "md"
+    - file.hasProperty("photo")
+views:
+  - type: cards
+    name: Products
+    order:
+      - file.name
+    image: note.photo
+    imageFit: contain
+    imageAspectRatio: 1
+    cardSize: 180
