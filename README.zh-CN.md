@@ -8,7 +8,9 @@
 
 适合用“一件物品一篇笔记”管理化妆品、书籍、设备或其他收藏。你负责创建笔记，Product Photo 负责处理图片，整个过程在本机完成。
 
-![复制产品图，点击导入，然后在图鉴中查看结果。](docs/assets/product-photo-demo.gif)
+![复制产品图，点击导入，然后在图鉴中查看结果。](https://cdn.jsdelivr.net/gh/xiaohanglyu/obsidian-product-photo@28aff544782132265e3ed384db87953f36b4907a/docs/assets/product-photo-demo.gif)
+
+[直接打开动画演示](https://cdn.jsdelivr.net/gh/xiaohanglyu/obsidian-product-photo@28aff544782132265e3ed384db87953f36b4907a/docs/assets/product-photo-demo.gif)
 
 **当前是面向 macOS 桌面的早期版本。** 需要手工安装，尚未上架 Obsidian 社区插件目录。核心流程已在 Obsidian 1.13.4、macOS 26.6.2 上验证。暂不支持移动端，Windows 和 Linux 尚未测试。
 

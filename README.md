@@ -8,7 +8,9 @@ Copy an image of a product, open its note, and click **Import product photo**. T
 
 Useful for collections and inventories: cosmetics, books, equipment, or anything you keep one note per item for. You create the notes; Product Photo handles their images. All processing stays on your device.
 
-![Copy a product image, click Import product photo, and view the result in a gallery.](docs/assets/product-photo-demo.gif)
+![Copy a product image, click Import product photo, and view the result in a gallery.](https://cdn.jsdelivr.net/gh/xiaohanglyu/obsidian-product-photo@28aff544782132265e3ed384db87953f36b4907a/docs/assets/product-photo-demo.gif)
+
+[Open the animated demo](https://cdn.jsdelivr.net/gh/xiaohanglyu/obsidian-product-photo@28aff544782132265e3ed384db87953f36b4907a/docs/assets/product-photo-demo.gif)
 
 **Early release for macOS desktop.** This plugin is installed manually; it is not listed in Obsidian’s Community plugins directory. The core workflow has been tested on Obsidian 1.13.4 and macOS 26.6.2. Mobile is not supported; Windows and Linux have not been tested.
 
