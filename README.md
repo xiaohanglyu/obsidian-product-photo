@@ -18,7 +18,7 @@ Useful for collections and inventories: cosmetics, books, equipment, or anything
 
 You do **not** need Node.js, Python, or a terminal to use the prebuilt plugin.
 
-1. [Download Product Photo 0.1.0](downloads/product-photo-0.1.0.zip?raw=true) and unzip it. You should get a folder named `product-photo`.
+1. [Download Product Photo 0.2.0](downloads/product-photo-0.2.0.zip?raw=true) and unzip it. You should get a folder named `product-photo`.
 2. Open the Obsidian vault where you want to use the plugin. Go to **Settings → Community plugins** and turn on community plugins if prompted.
 3. Click the **folder icon** beside **Installed plugins** to open that vault’s plugins folder in Finder.
 4. Copy the entire unzipped `product-photo` folder into it. The files must be directly inside that folder, as shown below.
@@ -33,10 +33,13 @@ Your vault/
             ├── manifest.json
             ├── styles.css
             ├── LICENSE
-            └── THIRD_PARTY_NOTICES.md
+            ├── THIRD_PARTY_NOTICES.md
+            └── ocr/                     # Offline OCR engine and languages
 ```
 
 If you cannot open the plugins folder from Settings, open your vault folder in Finder, press **Command + Shift + .** to show hidden files, and open `.obsidian`. Create a `plugins` folder inside it if needed.
+
+When updating an existing installation, replace the plugin files and the entire `ocr` folder, then disable and re-enable Product Photo. Keep `data.json` to preserve your settings.
 
 Download the plugin ZIP linked above, rather than GitHub’s **Code → Download ZIP**, which contains the source code. To build from source instead, see [Development](docs/DEVELOPMENT.md).
 
@@ -96,6 +99,19 @@ On success:
 - The button changes to **Replace image**. Your other properties and notes stay in place.
 
 **Copy → click Import. No Command-V step.** Normal Obsidian paste inserts a separate original image. Pasting first and then importing can leave two images in the note.
+
+## Fill product details from an order screenshot
+
+1. Create or open a product note. Click **Fill from order screenshot** beside the photo button, or run **Product Photo: Fill product information from order screenshot** from the command palette.
+2. Copy a complete order screenshot to the clipboard before clicking. You can also use **Choose screenshot** in the dialog. Keep product names, colors and item prices visible.
+3. Wait for local OCR. For several products, choose the one that belongs to this note. Compare the editable fields with the screenshot.
+4. Check the fields you want to write, then click **Save selected fields**. Existing nonempty values and properties absent from your template are unchecked by default.
+
+The dialog can fill `brand`, `shade`, `price`, `currency`, `purchase_channel`, `purchase_date`, and `open_date`. Product name can optionally update the note's top-level heading; it never renames the file. Size and quantity are shown for review only. The rest of your note stays in place.
+
+OCR uses bundled English and Simplified Chinese language packs, without a server, API key, AI service, or runtime downloads. It can misread text or group products incorrectly, especially in dense Chinese orders. Choose the order format manually when detection fails. Missing years, ambiguous dollar currencies, PAO and expiry dates are not guessed. Opening dates require your input or an explicit **Use as opening date** click for a complete delivery date.
+
+The order screenshot and raw OCR text are not saved. Import a separately cropped product image with the photo button if you also want a photo. [OCR details and limitations](docs/OCR.md).
 
 ## Replace a photo or reuse the setup
 

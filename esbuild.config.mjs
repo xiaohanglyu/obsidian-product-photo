@@ -1,4 +1,6 @@
 import { context } from 'esbuild';
+import { prepareOcrAssets } from './scripts/ocr-assets.mjs';
+await prepareOcrAssets();
 const ctx = await context({
   entryPoints: ['src/main.ts'], bundle: true, external: ['obsidian', 'electron', 'node:*'],
   format: 'cjs', target: 'es2022', platform: 'browser', outfile: 'main.js',

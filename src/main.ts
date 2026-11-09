@@ -6,6 +6,9 @@ import { addButton, DEFAULTS, inScope, PhotoError, Settings, validateSettings } 
 import { MAX_PIXELS, processImage } from './image';
 import { importPhoto, NoteHandle, Storage } from './importer';
 import { acquireLock } from './lock';
+import { OrderOcrModal } from './ocr/modal';
+import { loadOcrAssets } from './ocr/assets';
+import { applyFields } from './ocr/write';
 
 const message = (error: unknown) => error instanceof Error ? error.message : 'Image import failed.';
 
@@ -13,6 +16,7 @@ export default class ProductPhotoPlugin extends Plugin {
   settings: Settings = {...DEFAULTS};
   private running = new Set<string>();
   private alive = true;
+  private ocrModals = new Set<OrderOcrModal>();
   private refreshers = new Set<() => void>();
 
   async onload() {
@@ -37,10 +41,14 @@ export default class ProductPhotoPlugin extends Plugin {
       if (!checking) void this.run(file,document,'clipboard');
       return true;
     }});
+    this.addCommand({id:'fill-from-order',name:'Fill product information from order screenshot',checkCallback:checking=>{
+      const file=this.app.workspace.getActiveFile();if(!file||!inScope(file.path,this.settings.scope))return false;
+      if(!checking)void this.openOcr(file,document);return true;
+    }});
     this.addSettingTab(new PhotoSettingsTab(this.app,this));
     this.registerEvent(this.app.metadataCache.on('changed', () => this.refresh()));
   }
-  onunload() { this.alive = false; this.refreshers.clear(); }
+  onunload() { this.alive = false; for(const modal of this.ocrModals)modal.close(); this.ocrModals.clear(); this.refreshers.clear(); }
   subscribe(refresh: () => void) { this.refreshers.add(refresh); return () => this.refreshers.delete(refresh); }
   refresh() { for (const refresh of this.refreshers) refresh(); }
   isRunning(file: TFile) { return this.running.has(file.path); }
@@ -126,6 +134,30 @@ export default class ProductPhotoPlugin extends Plugin {
       },
     };
   }
+  async openOcr(file:TFile,doc:Document) {
+    const path=file.path;if(this.running.has(path)||!this.alive)return;
+    this.running.add(path);this.refresh();
+    try {
+      const settings=validateSettings({...this.settings});
+      if(!inScope(path,settings.scope))throw new PhotoError('This note is outside the configured folder scope.');
+      const initialText=await this.currentText(file);
+      const knownBrands=this.app.vault.getMarkdownFiles().map(note=>this.app.metadataCache.getFileCache(note)?.frontmatter?.brand).filter((brand):brand is string=>typeof brand==='string');
+      const modal=new OrderOcrModal(this.app,{
+        note:file,initialText,knownBrands,
+        clipboard:()=>readClipboard(doc),choose:()=>chooseFile(doc),
+        assets:language=>loadOcrAssets(this.app.vault.adapter,this.manifest.dir??`${this.app.vault.configDir}/plugins/${this.manifest.id}`,language),
+        save:async(before,values,selected,name,heading)=>{
+          if(!this.alive||file.path!==path||this.app.vault.getAbstractFileByPath(path)!==file)throw new PhotoError('The original note changed location or the plugin was disabled.');
+          if(!inScope(file.path,this.settings.scope))throw new PhotoError('This note is now outside the configured scope.');
+          if(!(this.app.vault.adapter instanceof FileSystemAdapter))throw new PhotoError('A local desktop vault is required.');
+          const unlock=await acquireLock(this.app.vault.adapter.getBasePath(),path);
+          try{await this.processNote(file,text=>{if(!this.alive||file.path!==path)throw new PhotoError('The original note moved or the plugin was disabled.');return applyFields(text,before,values,selected,name,heading);});}finally{await unlock();}
+        },
+        closed:()=>{this.ocrModals.delete(modal);this.running.delete(path);this.refresh();},
+      });
+      this.ocrModals.add(modal);modal.open();void modal.start();
+    }catch(error){this.running.delete(path);this.refresh();new Notice('Product Photo: '+message(error));}
+  }
   async run(file:TFile,doc:Document,source:'clipboard'|'file') {
     const originalPath = file.path;
     if (this.running.has(originalPath)) return;
@@ -201,15 +233,17 @@ class PhotoControls extends MarkdownRenderChild {
     this.containerEl.addClass('product-photo-controls');
     const primary=this.containerEl.createEl('button',{text:'Import product photo',cls:'mod-cta'});
     const fallback=this.containerEl.createEl('button',{text:'Choose image file'});
+    const ocr=this.containerEl.createEl('button',{text:'Fill from order screenshot'});
     const hint=this.containerEl.createEl('div',{text:'Copy an image, then click the button. Do not paste into the note.',cls:'product-photo-hint'});
     const refresh=() => {
       const running=this.plugin.isRunning(this.file), allowed=inScope(this.file.path,this.plugin.settings.scope);
-      primary.textContent=running ? 'Importing…' : this.plugin.hasPhoto(this.file) ? 'Replace image' : 'Import product photo';
-      primary.disabled=fallback.disabled=running || !allowed;
+      primary.textContent=running ? 'Working…' : this.plugin.hasPhoto(this.file) ? 'Replace image' : 'Import product photo';
+      primary.disabled=fallback.disabled=ocr.disabled=running || !allowed;
       hint.textContent=allowed ? 'Copy → click button. Do not paste into the note. · 800 × 800 WebP' : 'This note is outside the configured folder scope.';
     };
     this.registerDomEvent(primary,'click',() => void this.plugin.run(this.file,this.containerEl.ownerDocument,'clipboard'));
     this.registerDomEvent(fallback,'click',() => void this.plugin.run(this.file,this.containerEl.ownerDocument,'file'));
+    this.registerDomEvent(ocr,'click',()=>void this.plugin.openOcr(this.file,this.containerEl.ownerDocument));
     this.unsubscribe=this.plugin.subscribe(refresh); refresh();
   }
   onunload() { this.unsubscribe?.(); }

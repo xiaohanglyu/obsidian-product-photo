@@ -133,3 +133,19 @@ These describe required outcomes, not a claim that every scenario has been verif
 | A10 | View modes and disabling | Controls work in Reading view and Live Preview; Source mode remains editable; ordinary image links work after disabling the plugin. |
 | A11 | Reusable templates and scope | A template can reuse the block; add-button is idempotent; out-of-scope notes cannot import. |
 | A12 | Offline operation | Image import works without network access, model calls, external uploads, or a runtime toolchain. |
+
+
+## Version 0.2: reviewed local order OCR
+
+- Provide a separate order screenshot action in the note controls and command palette.
+- Read an image from the clipboard or a local file; perform English/Simplified Chinese OCR entirely locally with packaged resources.
+- Extract candidate products with editable brand, name, shade, item price, currency, channel and full purchase/delivery dates. Support a manual platform override.
+- Let the user choose one product for the initiating note. Do not create or rename files, save raw order screenshots, or automatically batch-import products.
+- Display the screenshot alongside review fields. Require Save and per-field selection. Preserve filled properties by default; properties absent from the template require explicit selection.
+- Only map brand, shade, price, currency, purchase channel, purchase date and actual opening date. Name may explicitly update the top-level heading. Size/quantity are review only.
+- Do not infer missing years, dollar currencies, PAO or expiry. Never automatically treat delivery as opening. Reject future actual opening dates.
+- Preserve photo references, unrelated properties, comments and body sections. Detect selected-field changes made during review and refuse conflicting saves.
+- Support cancellation, progress, input limits, resource validation and actionable missing-resource errors. No runtime downloads, AI API or screenshot upload.
+- Verify the actual packaged OCR worker in browser tests and exercise the workflow in an isolated Obsidian test vault.
+
+See [OCR contract](OCR.md) for exact property names and known extraction limitations.

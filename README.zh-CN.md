@@ -18,7 +18,7 @@
 
 使用预编译安装包，**不需要 Node.js、Python 或终端**。
 
-1. [下载 Product Photo 0.1.0](downloads/product-photo-0.1.0.zip?raw=true) 并解压，得到名为 `product-photo` 的文件夹。
+1. [下载 Product Photo 0.2.0](downloads/product-photo-0.2.0.zip?raw=true) 并解压，得到名为 `product-photo` 的文件夹。
 2. 在 Obsidian 中打开要使用插件的 Vault，进入 **设置 → 第三方插件（Community plugins）**，按提示启用第三方插件。
 3. 点击 **已安装插件（Installed plugins）** 旁的文件夹图标，在 Finder 中打开这个 Vault 的插件目录。
 4. 将解压后的整个 `product-photo` 文件夹放进去，确保文件层级与下图一致。
@@ -33,7 +33,8 @@
             ├── manifest.json
             ├── styles.css
             ├── LICENSE
-            └── THIRD_PARTY_NOTICES.md
+            ├── THIRD_PARTY_NOTICES.md
+            └── ocr/                     # 离线 OCR 引擎与语言包
 ```
 
 如果无法从设置中打开插件目录，可以在 Finder 中打开 Vault 文件夹，按 **Command + Shift + .** 显示隐藏文件，进入 `.obsidian`。如果里面没有 `plugins` 文件夹，手工创建即可。
@@ -98,6 +99,21 @@ photo: ""
 - 按钮变为 **Replace image**，其他属性和记录保留。
 
 **复制 → 点导入，不需要 Command-V。** 普通 Obsidian 粘贴会插入另一张原图；先粘贴再导入，正文可能显示两张图片。
+
+## 从订单截图填写产品信息
+
+1. 手工创建或打开产品笔记，点击图片按钮旁的 **Fill from order screenshot**。也可以在命令面板运行 **Product Photo: Fill product information from order screenshot**。
+2. 提前复制完整订单截图，或者在弹窗里点 **Choose screenshot** 选择文件。保留商品名、色号和商品价格。
+3. 等待本地 OCR 识别。截图有多件商品时，选择当前笔记对应的那件，对照左侧截图修改识别结果。
+4. 勾选要写入的字段，点击 **Save selected fields**。已有值以及模版里没有的属性默认不勾选。
+
+支持品牌、色号、单价、币种、购买渠道、购买日期和开封日期。产品名可以选择写入正文一级标题，不修改文件名。容量和数量仅供核对；正文其他部分保留。
+
+中英文语言包和识别引擎随安装包提供，无需联网、API Key 或 AI 服务。密集的天猫订单可能识别错字或分组错误，需要核对；可手工选择订单平台。缺少年份、币种不明确时留空，不推测 PAO 和过期日期。开封日期由你填写，也可以明确点击完整送达日期旁的 **Use as opening date**。
+
+订单截图和原始识别文字不会保存。需要产品图时，再裁剪单件商品，用原有图片按钮导入。[详细行为与限制（英文）](docs/OCR.md)。
+
+升级时替换插件文件和整个 `ocr` 文件夹，再关闭、开启 Product Photo；保留 `data.json` 以保留设置。
 
 ## 替换图片与复用模板
 

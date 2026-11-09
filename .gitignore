@@ -44,3 +44,6 @@ Thumbs.db
 
 # Intentionally versioned: docs/assets/, downloads/, tests/fixtures/,
 # package-lock.json, manifest.json, styles.css, and versions.json.
+
+# OCR runtime assets are generated from pinned npm dependencies.
+/ocr/

@@ -1,6 +1,6 @@
 {
   "name": "obsidian-product-photo",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Import product photos from your clipboard, resize and compress them to WebP, and link them to your Obsidian notes.",
   "private": true,
   "license": "MIT",
@@ -9,13 +9,17 @@
     "build": "tsc --noEmit && node esbuild.config.mjs",
     "test": "vitest run",
     "test:browser": "playwright test",
-    "package": "npm run build && node scripts/package.mjs"
+    "package": "npm run build && node scripts/package.mjs",
+    "pretest": "node --input-type=module -e \"import { prepareOcrAssets } from './scripts/ocr-assets.mjs'; await prepareOcrAssets();\""
   },
   "dependencies": {
+    "tesseract.js": "7.0.0",
     "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",
+    "@tesseract.js-data/chi_sim": "^1.0.0",
+    "@tesseract.js-data/eng": "^1.0.0",
     "@types/node": "^22.0.0",
     "esbuild": "^0.28.2",
     "obsidian": "^1.8.7",

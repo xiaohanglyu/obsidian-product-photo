@@ -1,4 +1,18 @@
-# Validation — 0.1.0
+# Validation — 0.2.0
+
+## OCR checks completed — 2026-11-07
+
+- 42 unit/adapter tests passed, including product grouping, explicit date labels, uncertain currencies, reviewed field writes, preservation, concurrent changes, empty YAML template properties and resource integrity failures.
+- TypeScript checking and the production build passed.
+- Real Chromium OCR tests use the packaged Tesseract worker/core and English + Simplified Chinese data, with HTTPS requests blocked. English grouping, Chinese text recognition and worker cancellation passed. The eight pre-existing image tests also passed.
+- Private English Sephora and Chinese Tmall screenshots were processed locally as smoke checks. Inputs and raw text were not committed. Dense Chinese layouts produced imperfect names and shade text; manual review and platform selection remain necessary. Recognition is not a verified product database.
+- In Obsidian 1.13.4 on macOS 26.6.2, the updated plugin was loaded only in the existing isolated test vault. The new note button opened review; an empty clipboard showed file fallback; a native picker loaded an order screenshot; OCR ran using local resources; the product selector and editable fields rendered. Saving brand and item price updated only those properties. The original heading, photo property, empty dates and usage text remained intact. Closing review returned the note controls to normal.
+- A null-template-property detection issue found during this check was corrected and covered by a regression test.
+
+OCR checks do not establish perfect extraction for arbitrary stores, Windows/Linux compatibility, every clipboard image source, or multi-window conflict behavior in the real host. Those cases still require manual testing. No update was installed in the user's original inventory vault.
+
+## Previous photo import validation — 0.1.0
+
 
 ## Automated checks completed
 
@@ -51,7 +65,7 @@ These results establish the core local import and replacement workflow on the te
 
 ## Suggested isolated-vault acceptance pass
 
-1. Create a disposable vault and copy the three built plugin files into `.obsidian/plugins/product-photo/`.
+1. Create a disposable vault and copy the full built plugin folder (including `ocr/`) into `.obsidian/plugins/product-photo/`.
 2. Enable the plugin, add the code block through the command, and verify Reading view and Live Preview.
 3. Import a single-product screenshot; inspect the 800×800 WebP, property, and note embed.
 4. Point a small Bases cards view to `photo` and verify its image updates without editing the Base.

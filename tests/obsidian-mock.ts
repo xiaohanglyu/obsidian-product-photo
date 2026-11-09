@@ -13,3 +13,5 @@ export class PluginSettingTab { containerEl:any; constructor(_app:any,_plugin:an
 export class MarkdownRenderChild { constructor(public containerEl:any){} registerDomEvent(){} }
 export class Setting {}
 export type App=any;
+
+export class Modal { modalEl:any;contentEl:any;constructor(public app:any){}open(){}close(){} }
